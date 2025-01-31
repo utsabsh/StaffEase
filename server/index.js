@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import { adminRouter } from "./Routes/AdminRoutes.js";
+import { employeeRouter } from "./Routes/EmployeeRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -15,6 +17,11 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
+// Routes
+app.use("/auth", adminRouter);
+app.use("/employee", employeeRouter);
+app.use(express.static("Public"));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
