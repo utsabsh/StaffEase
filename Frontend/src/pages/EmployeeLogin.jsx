@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const EmployeeLogin = () => {
   const [values, setValues] = useState({
@@ -9,6 +9,25 @@ const EmployeeLogin = () => {
   });
 
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    axios
+      .post("http://localhost:3000/employee/employee_login", values)
+      .then((result) => {
+        if (result.data.loginStatus) {
+          localStorage.setItem("valid", true);
+          navigate("/employee_dashboard");
+        } else {
+          setError(result.data.Error);
+          console.log(result.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <section className="h-screen  bg-purple-700 flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-14 items-center my-2 mx-5 md:mx-0 md:my-0 ">
@@ -26,7 +45,7 @@ const EmployeeLogin = () => {
           </h1>
         </div>
 
-        <form className="flex flex-col ">
+        <form className="flex flex-col " onSubmit={handleSubmit}>
           <input
             className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
             type="email"
