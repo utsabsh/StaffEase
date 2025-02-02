@@ -31,5 +31,13 @@ router.post("/employee_login", (req, res) => {
     }
   });
 });
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  return res.json({ Status: true });
+});
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  return res.json({ Status: true });
+});
 
 export { router as employeeRouter };
