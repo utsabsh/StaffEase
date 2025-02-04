@@ -69,7 +69,7 @@ const Dashboard = () => {
               </span>
             </Link>
             <Link
-              to="/dashboard"
+              to="/dashboard/category"
               className="flex rounded-md p-2 cursor-pointer hover:bg-light-white  hover:bg-purple-500 text-gray-300 text-sm items-center gap-x-4"
             >
               <BiCategoryAlt color="white" size={25} />
