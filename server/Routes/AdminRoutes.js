@@ -94,6 +94,39 @@ router.post("/add_employee", upload.single("image"), (req, res) => {
     });
   });
 });
+router.get("/employee", (req, res) => {
+  const sql = "SELECT * FROM employee";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Status: false, Error: "Query Error" });
+    return res.json({ Status: true, Result: result });
+  });
+});
+router.delete("/delete_employee/:id", (req, res) => {
+  const id = req.params.id;
+  const deleteAttendanceRecordsSql =
+    "delete from attendence_records where employee_id = ?";
+  const deleteEmployeeSql = "delete from employee where id = ?";
+
+  con.query(deleteAttendanceRecordsSql, [id], (err, result) => {
+    if (err) {
+      return res.json({
+        Status: false,
+        Error: "Error deleting attendance records: " + err,
+      });
+    }
+
+    con.query(deleteEmployeeSql, [id], (err, result) => {
+      if (err) {
+        return res.json({
+          Status: false,
+          Error: "Error deleting employee: " + err,
+        });
+      }
+
+      return res.json({ Status: true, Result: result });
+    });
+  });
+});
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
