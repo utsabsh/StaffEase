@@ -127,7 +127,41 @@ router.delete("/delete_employee/:id", (req, res) => {
     });
   });
 });
+router.get("/employee/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM employee WHERE id = ?";
+  con.query(sql, [id], (err, result) => {
+    if (err) return res.json({ Status: false, Error: "Query Error" });
+    return res.json({ Status: true, Result: result });
+  });
+});
+router.put("/edit_employee/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = `UPDATE employee 
+        set name = ?, email = ?, salary = ?, address = ?, password=?, phone = ?,  category_id = ? 
+        Where id = ?`;
+  bcrypt.hash(req.body.password, 10, (err, hash) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ status: false, error: "Password hashing error" });
 
+    const values = [
+      req.body.name,
+      req.body.email,
+      req.body.salary,
+      req.body.address,
+      hash,
+      req.body.phone,
+      req.body.category_id,
+    ];
+
+    con.query(sql, [...values, id], (err, result) => {
+      if (err) return res.json({ Status: false, Error: "Query Error" + err });
+      return res.json({ Status: true, Result: result });
+    });
+  });
+});
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: true });
