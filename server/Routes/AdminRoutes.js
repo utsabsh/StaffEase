@@ -162,6 +162,32 @@ router.put("/edit_employee/:id", (req, res) => {
     });
   });
 });
+
+router.post("/add_leave/:id", (req, res) => {
+  const id = req.params.id;
+
+  const sql = `INSERT INTO leave_records
+    (employee_id, description, type, from_date, to_date, status) 
+    VALUES (?)`;
+  console.log(req.body);
+  const values = [
+    id,
+    req.body.description,
+    req.body.type,
+    req.body.from_date,
+    req.body.to_date,
+    req.body.status,
+  ];
+
+  con.query(sql, [values], (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ status: false, error: "Database error" });
+    }
+
+    return res.json({ status: true });
+  });
+});
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: true });
