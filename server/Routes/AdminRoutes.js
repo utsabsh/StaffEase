@@ -188,6 +188,39 @@ router.post("/add_leave/:id", (req, res) => {
     return res.json({ status: true });
   });
 });
+
+router.get("/leave", (req, res) => {
+  const sql = "SELECT * FROM leave_records";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Status: false, Error: "Query Error" });
+    return res.json({ Status: true, Result: result });
+  });
+});
+
+// Update the status of a leave request
+router.put("/update_leave/:id", (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+
+  const sql = `UPDATE leave_records SET status = ? WHERE id = ?`;
+  const values = [status, id];
+
+  con.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ status: false, error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ status: false, error: "Leave request not found" });
+    }
+
+    return res.json({ status: true });
+  });
+});
+
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: true });
