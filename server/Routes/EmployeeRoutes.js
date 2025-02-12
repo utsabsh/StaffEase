@@ -31,6 +31,23 @@ router.post("/employee_login", (req, res) => {
     }
   });
 });
+router.get("/leave/:id", (req, res) => {
+  let sql = "SELECT * FROM leave_records";
+  const params = [];
+
+  if (req.params.id) {
+    sql += " WHERE employee_id = ?";
+    params.push(req.params.id);
+  }
+
+  con.query(sql, params, (err, result) => {
+    if (err) {
+      console.error("Error fetching leave records:", err);
+      return res.status(500).json({ error: "Error fetching data" });
+    }
+    res.json(result);
+  });
+});
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: true });
