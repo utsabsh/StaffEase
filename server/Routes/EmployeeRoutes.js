@@ -93,6 +93,32 @@ router.post("/check-in/:id", (req, res) => {
   });
 });
 
+router.get("/salaries", (req, res) => {
+  db.query("SELECT * FROM Salary", (err, results) => {
+    if (err) {
+      res.status(500).send("Error retrieving salaries");
+    } else {
+      res.json(results);
+    }
+  });
+});
+router.get("/salary/:id", (req, res) => {
+  let sql = "SELECT * FROM Salary"; // Assuming you want to select all columns
+  const params = [];
+
+  if (req.params.id) {
+    sql += " WHERE employee_id = ?";
+    params.push(req.params.id);
+  }
+
+  con.query(sql, params, (err, result) => {
+    if (err) {
+      console.error("Error fetching leave records:", err);
+      return res.status(500).json({ error: "Error fetching data" });
+    }
+    res.json(result);
+  });
+});
 // Check-out
 router.post("/check-out/:id", (req, res) => {
   const { id } = req.params;
