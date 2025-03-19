@@ -48,6 +48,24 @@ router.get("/leave/:id", (req, res) => {
     res.json(result);
   });
 });
+
+router.get("/detail/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM employee where id = ?";
+  con.query(sql, [id], (err, result) => {
+    if (err) return res.json({ Status: false });
+    return res.json(result);
+  });
+});
+
+router.get("/leavedetail/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM leave_records where id = ?";
+  con.query(sql, [id], (err, result) => {
+    if (err) return res.json({ Status: false });
+    return res.json(result);
+  });
+});
 // Check-in
 router.post("/check-in/:id", (req, res) => {
   const { id } = req.params;
